@@ -289,10 +289,11 @@ let globalUsername = "";
             }
         }
         function CookieClick() {
-          document.getElementById('score').value = <CookieCount>;
+          
             CookieCount=CookieCount+mengecookiesproklick;
             localStorage.setItem("CookieCount", CookieCount);
             document.getElementById("CookieCount").innerText = CookieCount;
+         document.getElementById('score').value = CookieCount;
             Sebastian()
         }
  
@@ -615,6 +616,7 @@ function resetleck() {
 </body>
 
 </html>
+
 
 
 
