@@ -31,69 +31,6 @@ img {
     transform: translateY(-10px);
 }
 
-#scoreEingabeFormular, 
-#meldung, 
-#leaderboardDisplay {
-    max-width: 450px; /* Oder die gewünschte Breite anpassen */
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Fixiert die Position für die Leaderboard-Ansicht (optional, aber hilfreich) */
-#leaderboardDisplay {
-    background-color: rgba(255, 255, 255, 0.9); /* Leichter weißer Hintergrund, damit es lesbar ist */
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    color: #333; /* Dunkle Schrift für gute Lesbarkeit auf hellem Grund */
-}
-
-/* Stellt sicher, dass die Überschrift im Leaderboard dunkle Farbe hat */
-#leaderboardDisplay h2 {
-    color: #333;
-}
-
-/* Passt die Schriftfarbe der Meldung an den gelben Hintergrund an */
-#meldung {
-    color: #727218; /* Dunkelgelb/Braun */
-}
-
-/* --- ZUSÄTZLICHE FIXES FÜR DEINE UPGRADE BUTTONS --- */
-
-/* Fügt eine feste Breite und Position für die Upgrade-Buttons rechts hinzu */
-/* Dies überschreibt die Tailwind-Klassen nicht, sondern ergänzt sie */
-.absolute {
-    position: absolute;
-}
-
-.right-5 {
-    right: 5rem; /* Etwas mehr Abstand vom rechten Rand */
-}
-
-/* Korrigiert top-Werte für die Buttons, da Tailwind top-0, top-25 etc. nicht standardmäßig kennt */
-/* Du solltest im HTML entweder 'top-0', 'top-1', 'top-2' bis 'top-96' oder custom values verwenden */
-/* Wenn du deine eigenen Klassen wie top-25 verwenden möchtest, musst du sie definieren, z.B.: */
-.top-25 {
-    top: 6rem; 
-}
-.top-50 {
-    top: 10rem;
-}
-.top-75 {
-    top: 14rem;
-}
-.top-100 {
-    top: 18rem;
-}
-.top-125 {
-    top: 22rem;
-}
-.bottom-5 {
-    bottom: 5rem;
-}
-.bottom-30 {
-    bottom: 9rem;
-}
 
 
 
