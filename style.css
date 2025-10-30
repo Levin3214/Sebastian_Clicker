@@ -1,6 +1,6 @@
 body {
-     background-color: rgb(0, 0, 0);
-    color: white;
+     
+   
     text-align: left;
      background-image: url('Sebastian.png');
     background-repeat: no-repeat;
@@ -35,3 +35,4 @@ img {
     transform: translateY(-10px);
 
 }
+
