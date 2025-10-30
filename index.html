@@ -98,135 +98,6 @@
  
 <script>
 
-
-const SHEET_DB_API_URL = 'https://sheetdb.io/api/v1/oe1bvyczy2nnn'; 
-
-let globalUsername = "";
-let uploadIntervalId;
-let leaderboardIntervalId;
- 
-
-    
-    const meldungDiv = document.getElementById('meldung');
-const leaderboardDisplayDiv = document.getElementById('leaderboardDisplay');
-const startButton = document.getElementById('startButton'); 
-const scoreInput = document.getElementById('score');
-    // --- Funktion zum Abrufen und Anzeigen der Bestenliste ---
-  function fetchLeaderboard() {
-    meldungDiv.textContent = `Lade Bestenliste...`;
-
-    // SheetDB URL zum Abrufen der Daten (sortiert nach Score absteigend)
-    fetch(`${SHEET_DB_API_URL}?sort_by=score&sort_order=desc&limit=10`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Serverfehler beim Laden der Bestenliste: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(leaderboardData => {
-        meldungDiv.textContent = `[${new Date().toLocaleTimeString()}] Bestenliste aktualisiert.`;
-
-        let html = '<h2 class="text-xl font-bold mt-4 mb-2">🏆 Bestenliste 🏆</h2>';
-        html += '<ol class="list-decimal list-inside space-y-1 p-2 bg-white rounded-lg shadow-inner">';
-        
-        if (leaderboardData && leaderboardData.length > 0) {
-            // Nur die Top 10 anzeigen
-            leaderboardData.slice(0, 10).forEach((entry, index) => {
-                // Konvertiere den Score von String (aus SheetDB) zurück zu Zahl
-                const score = parseInt(entry.score, 10) || 0; 
-                
-                html += `<li class="${entry.name === globalUsername ? 'font-bold text-blue-600' : 'text-gray-800'}">
-                    ${index + 1}. ${entry.name}: <span class="float-right">${score.toLocaleString()}</span>
-                </li>`;
-            });
-        } else {
-            html += '<li>Noch keine Einträge vorhanden.</li>';
-        }
-        
-        html += '</ol>';
-        leaderboardDisplayDiv.innerHTML = html;
-    })
-    .catch((error) => {
-        console.error('Fehler beim Laden der Bestenliste:', error);
-        meldungDiv.textContent = `Fehler beim Laden der Bestenliste: ${error.message}. Ist das Sheet veröffentlicht?`;
-        leaderboardDisplayDiv.innerHTML = '<p class="text-red-500">Konnte Bestenliste nicht laden.</p>';
-    });
-}
-
-
-// --- Funktion zum Senden des Scores (PUT-Anfrage zum Aktualisieren/Erstellen) ---
-function uploadScore() {
-    
-    const currentScore = CookieCount; // CookieCount ist immer aktuell
-
-    if (!globalUsername || currentScore === 0) {
-        // Starte keinen Upload, wenn der Score 0 ist oder der Username fehlt
-        return;
-    }
-
-    meldungDiv.textContent = `Sende Score (${currentScore}) für ${globalUsername}...`;
-    
-    // SheetDB nutzt eine PUT-Anfrage, um den Datensatz basierend auf 'name' zu aktualisieren.
-    // Wenn 'name' nicht existiert, wird ein neuer Eintrag erstellt.
-    fetch(`${SHEET_DB_API_URL}/name/${globalUsername}`, {
-        method: 'PUT', // PUT = Aktualisieren, wenn Name existiert; Erstellen, wenn Name nicht existiert
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            data: {
-                name: globalUsername, 
-                score: currentScore 
-            }
-        }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Serverfehler beim Hochladen: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        meldungDiv.textContent = `[${new Date().toLocaleTimeString()}] Score erfolgreich hochgeladen: ${currentScore}`;
-        fetchLeaderboard(); // Bestenliste nach erfolgreichem Upload aktualisieren
-    })
-    .catch((error) => {
-        console.error('Fehler beim Senden des Scores:', error);
-        meldungDiv.textContent = `Fehler beim Hochladen: ${error.message}`;
-    });
-}
-
-// --- Logik zum Setzen des Usernames und Starten der Intervalle ---
-startButton.addEventListener('click', function(event) {
-    event.preventDefault(); 
-    
-    const inputUsername = document.getElementById('username').value.trim();
-    
-    if (inputUsername.length >= 3) {
-        globalUsername = inputUsername;
-        meldungDiv.textContent = `Benutzername "${globalUsername}" gesetzt. Score wird alle 30s gesendet.`;
-        
-        // Stoppe bestehende Intervalle, falls der Button mehrmals geklickt wird
-        clearInterval(uploadIntervalId);
-        clearInterval(leaderboardIntervalId);
-        
-        // Starte Upload und Bestenliste sofort
-        uploadScore(); 
-        fetchLeaderboard();
-        
-        // Starte das automatische Senden alle 30 Sekunden
-        uploadIntervalId = setInterval(uploadScore, 30000); 
-        // Starte das automatische Aktualisieren der Bestenliste alle 15 Sekunden
-        leaderboardIntervalId = setInterval(fetchLeaderboard, 15000); 
-
-        // Deaktiviere das Username-Feld und den Button nach dem Start
-        document.getElementById('username').disabled = true;
-        startButton.disabled = true;
-    } else {
-        meldungDiv.textContent = 'Bitte gib einen gültigen Benutzernamen (mindestens 3 Zeichen) ein.';
-    }
-});
-
  
         let CookiesPerSecond = 0;
         let Oma=0;
@@ -656,6 +527,7 @@ function resetleck() {
 </body>
 
 </html>
+
 
 
 
