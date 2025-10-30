@@ -1,13 +1,10 @@
 body {
-     
-   
     text-align: left;
      background-image: url('Sebastian.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-
 }
  
 img {
@@ -17,8 +14,6 @@ img {
     left: 50%;
     transform: translateX(-50%);
 }
- 
- 
 .floating-number {
     position: absolute;
  
@@ -35,4 +30,5 @@ img {
     transform: translateY(-10px);
 
 }
+
 
