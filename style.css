@@ -1,0 +1,30 @@
+body {
+     background-color: rgb(0, 0, 0);
+    color: white;
+    text-align: left;
+}
+ 
+img {
+    width: 450px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+ 
+ 
+.floating-number {
+    position: absolute;
+ 
+    transition: opacity 0.5s ease, transform 0.5s ease;
+ 
+    opacity: 0;
+    width: 200px;
+    height: 100px;
+    z-index: 1000;
+}
+ 
+.floating-number.sichtbar {
+    opacity: 1;
+    transform: translateY(-10px);
+}

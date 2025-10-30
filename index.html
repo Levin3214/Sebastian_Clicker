@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link rel="stylesheet" href="style.css">
+ 
+ 
+</head>
+<body>
+<h1>Sebastian Clicker</h1>
+<p><span id="CookieCount"></span> Sebastians</p>
+<p>Pro Sekunde: <span id="PerSecond"></span></p>
+<p>Oma: <span id="Omacounterid"></span></p>
+<p>Farmer: <span id="Farmercookiecounterid"></span></p>
+<p>Mine: <span id="Minecookiecounterid" ></span></p>
+<p>Fabrik: <span id="Fabrikcookiecounterid" ></span></p>
+<p>Bank: <span id="bankcookiecounterid" ></span></p>
+<p>Planet: <span id="Planetcookiecounterid" ></span></p>
+<p>Reset: <span id="resetcounterid" ></span></p>
+ 
+ 
+<img src="Sebastian.png" class="mx-auto w-100 cursor-pointer" onclick="CookieClick()" draggable="false" />
+ 
+<div class="absolute top-0 right-5">
+<button onclick="OmaUpgrade()" class="bg-red-600 px-2 py-2 rounded-lg text-white mt-4">
+            Oma <br />
+            Per/s +1<br />
+            Kosten: <span id="preis_oma_id">75</span>
+ 
+</button>
+</div>
+ 
+ 
+<div class="absolute top-25 right-5">
+<button onclick="FarmerUpgrade()" class="bg-red-600 px-2 py-2 rounded-lg text-white mt-4">
+            Farmer <br />
+            Per/s +5<br />
+            Kosten: <span id="preis_Farm_id">500</span>
+ 
+</button>
+</div>
+ 
+<div class="absolute top-50 right-5">
+<button onclick="MineUpgrade()" class="bg-red-600 px-2 py-2 rounded-lg text-white mt-4">
+            Mine <br />
+            Per/s +25<br />
+            Kosten: <span id="preis_Mine_id">5000</span>
+ 
+</button>
+</div>
+ 
+<div class="absolute top-75 right-5">
+<button onclick="FabrikUpgrade()" class="bg-red-600 px-2 py-2 rounded-lg text-white mt-4">
+            Fabrik <br />
+            Per/s +100<br />
+            Kosten: <span id="preis_Fabrik_id">100000</span>
+ 
+</button>
+</div>
+ 
+<div class="absolute top-100 right-5">
+<button onclick="BankUpgrade()" class="bg-red-600 px-2 py-2 rounded-lg text-white mt-4">
+            Bank <br />
+            Per/s +1.500<br />
+            Kosten: <span id="preis_Bank_id">10000000</span>
+ 
+</button>
+</div>
+ 
+<div class="absolute bottom-5 left-5">
+<button onclick="resetleck()" class="bg-orange-400 px-2 py-2 rounded-lg text-white mt-4">
+        Resets <br />
+        1.000.000.000.000 <br />
+        *2 klick
+</button>
+</div>
+ 
+<div class="absolute bottom-30 left-5">
+<button onclick="deletestorage()" class="bg-orange-400 px-2 py-2 rounded-lg text-white mt-4">
+        Speicher <br />
+        Löschen
+</button>
+</div>
+ 
+<div class="absolute top-125 right-5">
+<button onclick="PlanetUpgrade()" class="bg-red-600 px-2 py-2 rounded-lg text-white mt-4">
+            Planet <br />
+            Per/s 10000<br />
+            Kosten:  <span id="preis_Planet_id">10000000000</span>
+ 
+</button>
+</div>
+ 
+<script>
+        let CookiesPerSecond = 0;
+        let Oma=0;
+        let Farmer = 0;
+        let Mine = 0;
+        let Fabrik = 0;
+        let Bank = 0;
+        let mengecookiesproklick =1;
+        let CookieCount =0;
+        let resetCounter =0;
+        let Planet =0;
+ 
+ 
+ 
+        let preis_oma = 75
+        let preis_Farm = 500
+        let preis_Mine = 5000
+        let preis_Fabrik =100000
+        let preis_Bank = 10000000
+        let preis_Planet =1000000000
+ 
+        window.addEventListener("DOMContentLoaded", () => {
+ 
+            CookieCount = parseInt(localStorage.getItem("CookieCount")) || 0;
+            document.getElementById("CookieCount").innerText = CookieCount;
+ 
+            CookiesPerSecond = parseInt(localStorage.getItem("CookiesPerSecond")) || 0;
+            document.getElementById("PerSecond").innerText = CookiesPerSecond;
+ 
+            Farmer = parseInt(localStorage.getItem("Farmercookiecounter")) || 0;
+            document.getElementById("Farmercookiecounterid").innerText = Farmer;
+ 
+            Mine = parseInt(localStorage.getItem("Minecookiecounter")) || 0;
+            document.getElementById("Minecookiecounterid").innerText = Mine;
+ 
+            Fabrik = parseInt(localStorage.getItem("Fabrikcookiecounter")) || 0;
+            document.getElementById("Fabrikcookiecounterid").innerText = Fabrik;
+ 
+            Bank = parseInt(localStorage.getItem("bankcookiecounter")) || 0;
+            document.getElementById("bankcookiecounterid").innerText = Bank;
+ 
+            Oma = parseInt(localStorage.getItem("Omacookiecounter")) || 0;
+            document.getElementById("Omacounterid").innerText = Oma;
+ 
+            Planet = parseInt(localStorage.getItem("Planetcookiecounter")) || 0;
+            document.getElementById("Planetcookiecounterid").innerText = Planet;
+ 
+            resetCounter = parseInt(localStorage.getItem("resetcounter")) || 0;
+            document.getElementById("resetcounterid").innerText = resetCounter;
+ 
+            preis_oma = parseInt(localStorage.getItem("preis_oma")) || preis_oma;
+            document.getElementById("preis_oma_id").innerText = preis_oma;
+ 
+            preis_Farm = parseInt(localStorage.getItem("preis_Farm")) || preis_Farm;
+            document.getElementById("preis_Farm_id").innerText = preis_Farm;
+ 
+            preis_Mine = parseInt(localStorage.getItem("preis_Mine")) || preis_Mine;
+            document.getElementById("preis_Mine_id").innerText = preis_Mine;
+ 
+            preis_Fabrik = parseInt(localStorage.getItem("preis_Fabrik")) || preis_Fabrik;
+            document.getElementById("preis_Fabrik_id").innerText = preis_Fabrik;
+ 
+            preis_Bank = parseInt(localStorage.getItem("preis_Bank")) || preis_Bank;
+            document.getElementById("preis_Bank_id").innerText = preis_Bank;
+ 
+           
+            preis_Planet = parseInt(localStorage.getItem("preis_Planet")) || preis_Planet;
+            document.getElementById("preis_Planet_id").innerText = preis_Planet;
+ 
+            mengecookiesproklick = parseInt(localStorage.getItem("mengecookiesproklick")) || 1;
+           
+ 
+        })
+        function OmaUpgrade() {
+   
+            if (CookieCount >= preis_oma) {
+                CookieCount-=preis_oma;
+                CookiesPerSecond += 1;
+                Oma += 1;
+ 
+                preis_oma= Math.ceil(preis_oma+preis_oma*0.05)
+ 
+                localStorage.setItem("preis_oma", preis_oma);
+                document.getElementById("preis_oma_id").innerText = preis_oma;
+               
+                localStorage.setItem("CookiesPerSecond", CookiesPerSecond);
+                document.getElementById("PerSecond").innerText = CookiesPerSecond;
+ 
+                localStorage.setItem("CookieCount",CookieCount)
+                document.getElementById("CookieCount").innerText = CookieCount;
+ 
+                localStorage.setItem("Omacookiecounter", Oma);
+                document.getElementById("Omacounterid").innerText = Oma;
+ 
+            } else {
+                alert("Not enough cookies. Stupid!?");
+            }
+        }
+        function CookieClick() {
+            CookieCount=CookieCount+mengecookiesproklick;
+            localStorage.setItem("CookieCount", CookieCount);
+            document.getElementById("CookieCount").innerText = CookieCount;
+            Sebastian()
+        }
+ 
+        function deletestorage()
+        {
+            localStorage.clear();
+ 
+            mengecookiesproklick =1;
+ 
+ 
+            CookieCount = 0;
+            document.getElementById("CookieCount").innerText = CookieCount;
+ 
+            CookiesPerSecond = 0;
+            document.getElementById("PerSecond").innerText = CookiesPerSecond;
+ 
+            Farmer = 0;
+            document.getElementById("Farmercookiecounterid").innerText = Farmer;
+ 
+            Mine = 0;
+            document.getElementById("Minecookiecounterid").innerText = Mine;
+ 
+            Fabrik = 0;
+            document.getElementById("Fabrikcookiecounterid").innerText = Fabrik;
+ 
+            Bank = 0;
+            document.getElementById("bankcookiecounterid").innerText = Bank;
+ 
+            Oma = 0;
+            document.getElementById("Omacounterid").innerText = Oma;
+ 
+            Planet = 0;
+            document.getElementById("Planetcookiecounterid").innerText = Planet;
+ 
+            resetCounter = 0;
+            document.getElementById("resetcounterid").innerText = resetCounter;
+ 
+            preis_oma= 75
+            document.getElementById("preis_oma_id").innerText = preis_oma;
+ 
+            preis_Farm= 500
+            document.getElementById("preis_Farm_id").innerText = preis_Farm;
+ 
+            preis_Mine= 5000
+            document.getElementById("preis_Mine_id").innerText = preis_Mine;
+ 
+            preis_Fabrik= 10000
+            document.getElementById("preis_Fabrik_id").innerText = preis_Fabrik;
+ 
+            preis_Bank= 1000000
+            document.getElementById("preis_Bank_id").innerText = preis_Bank;
+ 
+            preis_Planet= 1000000
+            document.getElementById("preis_Planet_id").innerText = preis_Planet;
+        }
+ 
+        setInterval(() => {
+            CookieCount=CookieCount+CookiesPerSecond;
+            localStorage.setItem("CookieCount", CookieCount);
+            document.getElementById("CookieCount").innerText = CookieCount;
+        }, 1000);
+ 
+        function FarmerUpgrade() {
+            if (CookieCount >= preis_Farm) {
+                CookieCount-=preis_Farm;
+                CookiesPerSecond += 5;
+                Farmer += 1;
+               
+                preis_Farm = Math.ceil(preis_Farm+preis_Farm*0.05)
+ 
+                localStorage.setItem("preis_Farm", preis_Farm);
+                document.getElementById("preis_Farm_id").innerText = preis_Farm;
+ 
+                localStorage.setItem("Farmercookiecounter", Farmer);
+                document.getElementById("Farmercookiecounterid").innerText = Farmer;
+ 
+                localStorage.setItem("CookiesPerSecond", CookiesPerSecond);
+                document.getElementById("PerSecond").innerText = CookiesPerSecond;
+ 
+                localStorage.setItem("CookieCount",CookieCount)
+                document.getElementById("CookieCount").innerText = CookieCount;
+ 
+            } else {
+                alert("Not enough cookies. Stupid!?");
+            }
+        }
+ 
+ 
+ 
+ 
+function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+ 
+ 
+function Sebastian(xSeconds = 4) {
+ 
+    const fadeDuration = 1000;
+ 
+    const newDiv = document.createElement("div");
+    newDiv.innerHTML = `<span class="text-white text-5xl">+${mengecookiesproklick}</span>,<img src="Sebastian.png" class="mx-auto w-10 cursor-pointer" onclick="CookieClick()" draggable="false" />`;
+    newDiv.classList.add("floating-number");
+ 
+   
+    const w = 50;
+    const h = 50;
+   
+    const maxX = Math.max(0, window.innerWidth - w);
+    const maxY = Math.max(0, window.innerHeight - h);
+ 
+    newDiv.style.left = randInt(0, maxX) + "px";
+    newDiv.style.top = randInt(0, maxY) + "px";
+   
+ 
+   
+    document.body.appendChild(newDiv);
+   
+   
+    setTimeout(() => newDiv.classList.add("sichtbar"), 10);
+ 
+   
+    setTimeout(() => {
+        newDiv.classList.remove("sichtbar");
+        setTimeout(() => {
+            newDiv.remove();
+        }, fadeDuration);
+       
+    }, xSeconds * 100);
+}
+ 
+
+   
+        function MineUpgrade() {
+         
+            if (CookieCount >= preis_Mine) {
+                CookieCount-=preis_Mine;
+                CookiesPerSecond += 25;
+                Mine += 1;
+               
+                preis_Mine = Math.ceil(preis_Mine+preis_Mine*0.05)
+ 
+                localStorage.setItem("preis_Mine", preis_Mine);
+                document.getElementById("preis_Mine_id").innerText = preis_Mine;
+ 
+                localStorage.setItem("Minecookiecounter", Mine);
+                document.getElementById("Minecookiecounterid").innerText = Mine;
+ 
+                localStorage.setItem("CookiesPerSecond", CookiesPerSecond);
+                document.getElementById("PerSecond").innerText = CookiesPerSecond;
+ 
+                localStorage.setItem("CookieCount",CookieCount)
+                document.getElementById("CookieCount").innerText = CookieCount;
+ 
+            } else {
+                alert("Not enough cookies. Stupid!?");
+            }
+        }
+ 
+        function FabrikUpgrade() {
+            if (CookieCount >= preis_Fabrik) {
+                CookieCount-=preis_Fabrik;
+ 
+                CookiesPerSecond += 100;
+                Fabrik += 1;
+ 
+                preis_Fabrik = Math.ceil(preis_Fabrik+preis_Fabrik*0.05)
+ 
+                localStorage.setItem("preis_Fabrik", preis_Fabrik);
+                document.getElementById("preis_Fabrik_id").innerText = preis_Fabrik;
+ 
+                localStorage.setItem("Fabrikcookiecounter", Fabrik);
+                document.getElementById("Fabrikcookiecounterid").innerText = Fabrik;
+ 
+                localStorage.setItem("CookiesPerSecond", CookiesPerSecond);
+                document.getElementById("PerSecond").innerText = CookiesPerSecond;
+ 
+                localStorage.setItem("CookieCount",CookieCount)
+                document.getElementById("CookieCount").innerText = CookieCount;
+ 
+            } else {
+                alert("Not enough cookies. Stupid!?");
+            }
+        }
+ 
+        function BankUpgrade() {
+           
+         
+            if (CookieCount >= preis_Bank) {
+                CookieCount-=preis_Bank;
+ 
+                CookiesPerSecond += 1500;
+                Bank += 1;
+               
+                preis_Bank = Math.ceil(preis_Bank+preis_Bank*0.05)
+ 
+                localStorage.setItem("preis_Bank", preis_Bank);
+                document.getElementById("preis_Bank_id").innerText = preis_Bank;
+ 
+                localStorage.setItem("bankcookiecounter", Bank);
+                document.getElementById("bankcookiecounterid").innerText = Bank;
+ 
+                localStorage.setItem("CookiesPerSecond", CookiesPerSecond);
+                document.getElementById("PerSecond").innerText = CookiesPerSecond;
+               
+                localStorage.setItem("CookieCount",CookieCount)
+                document.getElementById("CookieCount").innerText = CookieCount;
+ 
+            } else {
+                alert("Not enough cookies. Stupid!?");
+            }
+        }
+ 
+ 
+               function PlanetUpgrade() {
+           
+         
+            if (CookieCount >= preis_Planet) {
+                CookieCount-=preis_Planet;
+ 
+                CookiesPerSecond += 10000;
+                Planet += 1;
+               
+                preis_Planet = Math.ceil(preis_Planet+preis_Planet*0.05)
+ 
+                localStorage.setItem("preis_Planet", preis_Planet);
+                document.getElementById("preis_Planet_id").innerText = preis_Planet;
+ 
+                localStorage.setItem("Planetcookiecounter", Planet);
+                document.getElementById("Planetcookiecounterid").innerText = Planet;
+ 
+                localStorage.setItem("CookiesPerSecond", CookiesPerSecond);
+                document.getElementById("PerSecond").innerText = CookiesPerSecond;
+               
+                localStorage.setItem("CookieCount",CookieCount)
+                document.getElementById("CookieCount").innerText = CookieCount;
+ 
+            } else {
+                alert("Not enough cookies. Stupid!?");
+            }
+        }
+ 
+ 
+ 
+function resetleck() {
+ 
+  if (CookieCount >= 1000000000000) {
+   
+    CookieCount=0;
+    document.getElementById("CookieCount").innerText = CookieCount;
+    localStorage.setItem("CookieCount", CookieCount);
+ 
+ 
+    mengecookiesproklick *= 2;
+    localStorage.setItem("mengecookiesproklick", mengecookiesproklick);
+ 
+   
+    CookiesPerSecond = 0;
+    document.getElementById("PerSecond").innerText = CookiesPerSecond;
+    localStorage.setItem("CookiesPerSecond", CookiesPerSecond);
+ 
+    resetCounter +=1;
+    localStorage.setItem("resetcounter", resetCounter);
+    document.getElementById("resetcounterid").innerText = resetCounter;
+ 
+ 
+    Oma=0;
+    Farmer=0;
+    Mine=0;
+    Fabrik=0;
+    Bank=0;
+    Planet=0;
+ 
+    localStorage.setItem("Omacookiecounter", Oma)
+    document.getElementById("Omacounterid").innerText = Oma;
+ 
+    localStorage.setItem("Farmercookiecounter", Farmer)
+    document.getElementById("Farmercookiecounterid").innerText = Farmer;
+ 
+    localStorage.setItem("Minecookiecounter", Mine)
+    document.getElementById("Minecookiecounterid").innerText = Mine;
+ 
+    localStorage.setItem("Fabrikcookiecounter", Fabrik)
+    document.getElementById("Fabrikcookiecounterid").innerText = Fabrik;
+ 
+    localStorage.setItem("bankcookiecounter", Bank)
+    document.getElementById("bankcookiecounterid").innerText = Bank;
+ 
+    localStorage.setItem("Planetcookiecounter", Planet)
+    document.getElementById("Planetcookiecounterid").innerText = Planet;
+ 
+    preis_oma=75;
+    localStorage.setItem("preis_oma", preis_oma)
+    document.getElementById("preis_oma_id").innerText = preis_oma;
+   
+    preis_Farm=500;
+    localStorage.setItem("preis_Farm", preis_Farm)
+    document.getElementById("preis_Farm_id").innerText = preis_Farm;
+ 
+    preis_Mine=5000;
+    localStorage.setItem("preis_Mine", preis_Mine)
+    document.getElementById("preis_Mine_id").innerText = preis_Mine;
+ 
+    preis_Fabrik=100000;
+    localStorage.setItem("preis_Fabrik", preis_Fabrik)
+    document.getElementById("preis_Fabrik_id").innerText = preis_Fabrik;
+ 
+    preis_Bank=1000000;
+    localStorage.setItem("preis_Bank", preis_Bank)
+    document.getElementById("preis_Bank_id").innerText = preis_Bank;
+ 
+    preis_Planet=10000000000;
+    localStorage.setItem("preis_Planet", preis_Planet)
+    document.getElementById("preis_Planet_id").innerText = preis_Planet;
+ 
+  } else {
+    alert("Not enough cookies. Stupid!?");
+  }
+}
+</script>
+</body>
+</html>
