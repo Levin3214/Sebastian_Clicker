@@ -124,77 +124,126 @@
 
 
 let globalUsername = "";
-    
-    // Hole das Formular-Element und das Meldungs-Feld
-    const form = document.getElementById('scoreEingabeFormular');
-    const meldungDiv = document.getElementById('meldung');
+    
+    // Hole das Formular-Element und das Meldungs-Feld
+    const form = document.getElementById('scoreEingabeFormular');
+    const meldungDiv = document.getElementById('meldung');
+    const leaderboardDisplayDiv = document.getElementById('leaderboardDisplay'); // Neu: Element für die Bestenliste
 
-    // --- Funktion zum Senden des Scores an den Server ---
-    function uploadScore() {
-        
-        // 1. Werte auslesen: Score wird vor jedem Senden neu gelesen
-        const currentScore = document.getElementById('score').value;
+    // --- Funktion zum Abrufen und Anzeigen der Bestenliste ---
+    function fetchLeaderboard() {
+        meldungDiv.textContent = `Lade Bestenliste...`;
 
-        // Abbrechen, wenn noch kein Username eingegeben wurde
-        if (!globalUsername || currentScore === "") {
-            meldungDiv.textContent = 'Bitte zuerst deinen Benutzernamen eingeben und auf "Username setzen" klicken.';
-            return;
-        }
-
-        meldungDiv.textContent = `Sende Score (${currentScore}) für ${globalUsername}...`;
-
-        fetch('/api/submit-score', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: globalUsername, // Nutze den global gespeicherten Username
-                score: parseInt(currentScore, 10) // Score als Ganzzahl senden
-            }),
-        })
+        fetch('/api/leaderboard')
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Serverfehler: ${response.status}`);
+                throw new Error(`Serverfehler beim Laden der Bestenliste: ${response.status}`);
             }
             return response.json();
         })
-        .then(data => {
-            console.log('Score erfolgreich gesendet:', data);
-            meldungDiv.textContent = `[${new Date().toLocaleTimeString()}] Score erfolgreich hochgeladen: ${currentScore}`;
+        .then(leaderboardData => {
+            console.log('Bestenliste erfolgreich geladen:', leaderboardData);
+            meldungDiv.textContent = `[${new Date().toLocaleTimeString()}] Bestenliste aktualisiert.`;
+
+            // Anzeigen der Bestenliste
+            let html = '<h2 class="text-xl font-bold mt-4 mb-2">🏆 Bestenliste 🏆</h2>';
+            html += '<ol class="list-decimal list-inside space-y-1 p-2 bg-white rounded-lg shadow-inner">';
+            
+            // Annahme: leaderboardData ist ein Array von Objekten { name: 'Spieler', score: 12345 }
+            if (leaderboardData && leaderboardData.length > 0) {
+                leaderboardData.forEach((entry, index) => {
+                    html += `<li class="${entry.name === globalUsername ? 'font-bold text-blue-600' : 'text-gray-800'}">
+                        ${index + 1}. ${entry.name}: <span class="float-right">${entry.score.toLocaleString()}</span>
+                    </li>`;
+                });
+            } else {
+                html += '<li>Noch keine Einträge vorhanden.</li>';
+            }
+            
+            html += '</ol>';
+            leaderboardDisplayDiv.innerHTML = html;
         })
         .catch((error) => {
-            console.error('Fehler beim Senden des Scores:', error);
-            meldungDiv.textContent = `Fehler beim Hochladen: ${error.message}`;
+            console.error('Fehler beim Laden der Bestenliste:', error);
+            meldungDiv.textContent = `Fehler beim Laden der Bestenliste: ${error.message}`;
+            leaderboardDisplayDiv.innerHTML = '<p class="text-red-500">Konnte Bestenliste nicht laden.</p>';
         });
     }
 
-    // --- Logik zum Setzen des Usernames und Starten des Intervalls ---
-    
-    // Ändere den Button-Typ, damit er das Formular nicht standardmäßig sendet
-    const startButton = document.getElementById('startButton'); 
+    // --- Funktion zum Senden des Scores an den Server ---
+    function uploadScore() {
+        
+        // 1. Werte auslesen: Score wird vor jedem Senden neu gelesen
+        const currentScore = document.getElementById('score').value;
 
-    startButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Verhindert das Standard-Sende-Verhalten
-        
-        const inputUsername = document.getElementById('username').value.trim();
-        
-        if (inputUsername.length >= 3) {
-            globalUsername = inputUsername;
-            meldungDiv.textContent = `Benutzername "${globalUsername}" gesetzt. Der Score wird nun alle 30 Sekunden automatisch gesendet.`;
-            
-            // Starte den Upload-Vorgang
-            uploadScore(); // Erster Upload sofort
-            // Starte das automatische Senden alle 30 Sekunden
-            setInterval(uploadScore, 30000); 
-            
-            // Deaktiviere das Username-Feld und den Button nach dem Start
-            document.getElementById('username').disabled = true;
-            startButton.disabled = true;
-        } else {
-            meldungDiv.textContent = 'Bitte gib einen gültigen Benutzernamen (mindestens 3 Zeichen) ein.';
-        }
-    });
+        // Abbrechen, wenn noch kein Username eingegeben wurde
+        if (!globalUsername || currentScore === "") {
+            meldungDiv.textContent = 'Bitte zuerst deinen Benutzernamen eingeben und auf "Username setzen" klicken.';
+            return;
+        }
+
+        meldungDiv.textContent = `Sende Score (${currentScore}) für ${globalUsername}...`;
+
+        fetch('/api/submit-score', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: globalUsername, // Nutze den global gespeicherten Username
+                score: parseInt(currentScore, 10) // Score als Ganzzahl senden
+            }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Serverfehler: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Score erfolgreich gesendet:', data);
+            meldungDiv.textContent = `[${new Date().toLocaleTimeString()}] Score erfolgreich hochgeladen: ${currentScore}`;
+            fetchLeaderboard(); // Bestenliste nach erfolgreichem Upload aktualisieren
+        })
+        .catch((error) => {
+            console.error('Fehler beim Senden des Scores:', error);
+            meldungDiv.textContent = `Fehler beim Hochladen: ${error.message}`;
+        });
+    }
+
+    // --- Logik zum Setzen des Usernames und Starten des Intervalls ---
+    
+    // Ändere den Button-Typ, damit er das Formular nicht standardmäßig sendet
+    const startButton = document.getElementById('startButton'); 
+
+    startButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Verhindert das Standard-Sende-Verhalten
+        
+        const inputUsername = document.getElementById('username').value.trim();
+        
+        if (inputUsername.length >= 3) {
+            globalUsername = inputUsername;
+            meldungDiv.textContent = `Benutzername "${globalUsername}" gesetzt. Der Score wird nun alle 30 Sekunden automatisch gesendet. Die Bestenliste wird alle 15 Sekunden aktualisiert.`;
+            
+            // Starte den Upload-Vorgang
+            uploadScore(); // Erster Upload sofort (aktualisiert auch die Bestenliste)
+            // Starte das automatische Senden alle 30 Sekunden
+            setInterval(uploadScore, 30000); 
+            // NEU: Starte das automatische Aktualisieren der Bestenliste alle 15 Sekunden
+            setInterval(fetchLeaderboard, 15000); 
+
+            // Deaktiviere das Username-Feld und den Button nach dem Start
+            document.getElementById('username').disabled = true;
+            startButton.disabled = true;
+        } else {
+            meldungDiv.textContent = 'Bitte gib einen gültigen Benutzernamen (mindestens 3 Zeichen) ein.';
+        }
+    });
+
+// Beim initialen Laden einmal die Bestenliste abrufen (optional, kann auch erst nach Username-Eingabe erfolgen)
+// fetchLeaderboard(); // Auskommentiert, da es am besten nach Setzen des Usernames startet.
+
+// ... (restlicher bestehender Code, wie die Upgrade-Funktionen) ...
 
  
         let CookiesPerSecond = 0;
@@ -625,6 +674,7 @@ function resetleck() {
 </body>
 
 </html>
+
 
 
 
