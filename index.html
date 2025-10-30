@@ -351,10 +351,13 @@ let globalUsername = "";
         }
  
         setInterval(() => {
-            CookieCount=CookieCount+CookiesPerSecond;
-            localStorage.setItem("CookieCount", CookieCount);
-            document.getElementById("CookieCount").innerText = CookieCount;
-        }, 1000);
+    CookieCount = CookieCount + CookiesPerSecond;
+    localStorage.setItem("CookieCount", CookieCount);
+    document.getElementById("CookieCount").innerText = CookieCount;
+    
+    // ✅ NEU: Den aktuellen CookieCount in das Score-Eingabefeld schreiben
+    document.getElementById('score').value = CookieCount; 
+}, 1000);
  
         function FarmerUpgrade() {
             if (CookieCount >= preis_Farm) {
@@ -616,6 +619,7 @@ function resetleck() {
 </body>
 
 </html>
+
 
 
 
