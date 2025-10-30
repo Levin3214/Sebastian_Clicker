@@ -108,7 +108,7 @@
  
  
         let preis_oma = 75
-        let preis_Farm = 1
+        let preis_Farm = 500
         let preis_Mine = 5000
         let preis_Fabrik =75000
         let preis_Bank = 1000000
@@ -146,7 +146,7 @@
             preis_oma = parseInt(localStorage.getItem("preis_oma")) || preis_oma;
             document.getElementById("preis_oma_id").innerText = preis_oma;
  
-            preis_Farm = 1;
+            preis_Farm = parseInt(localStorage.getItem("preis_Farm")) || preis_Farm;
             document.getElementById("preis_Farm_id").innerText = preis_Farm;
  
             preis_Mine = parseInt(localStorage.getItem("preis_Mine")) || preis_Mine;
@@ -517,6 +517,7 @@ function resetleck() {
 </body>
 
 </html>
+
 
 
 
