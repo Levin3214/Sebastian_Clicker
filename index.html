@@ -9,6 +9,27 @@
  
 </head>
 <body>
+
+
+ <form id="scoreEingabeFormular">
+        
+        <label for="username">Dein Benutzername (einmalig eingeben):</label><br>
+        <input type="text" id="username" name="username" required minlength="3" maxlength="20"><br><br>
+        
+        <button type="button" id="startButton">Username setzen & Upload starten</button>
+        
+        <hr>
+        
+        <label for="score">Dein aktueller Cookie-Stand (Wird vom Spiel aktualisiert):</label><br>
+        <input type="number" id="score" name="score" value="0" required min="0"><br><br>
+        
+        </form>
+
+    <div id="meldung" style="margin-top: 15px; padding: 10px; border: 1px solid #ccc;">
+        Bitte zuerst deinen Benutzernamen eingeben.
+    </div>
+
+<div id="meldung"></div>
 <h1>Sebastian Clicker</h1>
 <p"><span id="CookieCount"></span> Sebastians</p>
 <p">Pro Sekunde: <span id="PerSecond"></span></p>
@@ -94,6 +115,82 @@
 </div>
  
 <script>
+
+
+let globalUsername = "";
+    
+    // Hole das Formular-Element und das Meldungs-Feld
+    const form = document.getElementById('scoreEingabeFormular');
+    const meldungDiv = document.getElementById('meldung');
+
+    // --- Funktion zum Senden des Scores an den Server ---
+    function uploadScore() {
+        
+        // 1. Werte auslesen: Score wird vor jedem Senden neu gelesen
+        const currentScore = document.getElementById('score').value;
+
+        // Abbrechen, wenn noch kein Username eingegeben wurde
+        if (!globalUsername || currentScore === "") {
+            meldungDiv.textContent = 'Bitte zuerst deinen Benutzernamen eingeben und auf "Username setzen" klicken.';
+            return;
+        }
+
+        meldungDiv.textContent = `Sende Score (${currentScore}) für ${globalUsername}...`;
+
+        fetch('/api/submit-score', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: globalUsername, // Nutze den global gespeicherten Username
+                score: parseInt(currentScore, 10) // Score als Ganzzahl senden
+            }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Serverfehler: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Score erfolgreich gesendet:', data);
+            meldungDiv.textContent = `[${new Date().toLocaleTimeString()}] Score erfolgreich hochgeladen: ${currentScore}`;
+        })
+        .catch((error) => {
+            console.error('Fehler beim Senden des Scores:', error);
+            meldungDiv.textContent = `Fehler beim Hochladen: ${error.message}`;
+        });
+    }
+
+    // --- Logik zum Setzen des Usernames und Starten des Intervalls ---
+    
+    // Ändere den Button-Typ, damit er das Formular nicht standardmäßig sendet
+    const startButton = document.getElementById('startButton'); 
+
+    startButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Verhindert das Standard-Sende-Verhalten
+        
+        const inputUsername = document.getElementById('username').value.trim();
+        
+        if (inputUsername.length >= 3) {
+            globalUsername = inputUsername;
+            meldungDiv.textContent = `Benutzername "${globalUsername}" gesetzt. Der Score wird nun alle 30 Sekunden automatisch gesendet.`;
+            
+            // Starte den Upload-Vorgang
+            uploadScore(); // Erster Upload sofort
+            // Starte das automatische Senden alle 30 Sekunden
+            setInterval(uploadScore, 30000); 
+            
+            // Deaktiviere das Username-Feld und den Button nach dem Start
+            document.getElementById('username').disabled = true;
+            startButton.disabled = true;
+        } else {
+            meldungDiv.textContent = 'Bitte gib einen gültigen Benutzernamen (mindestens 3 Zeichen) ein.';
+        }
+    });
+
+ 
         let CookiesPerSecond = 0;
         let Oma=0;
         let Farmer = 0;
@@ -192,6 +289,7 @@
             }
         }
         function CookieClick() {
+          document.getElementById('score').value = <CookieCount>;
             CookieCount=CookieCount+mengecookiesproklick;
             localStorage.setItem("CookieCount", CookieCount);
             document.getElementById("CookieCount").innerText = CookieCount;
@@ -517,6 +615,7 @@ function resetleck() {
 </body>
 
 </html>
+
 
 
 
